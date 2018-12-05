@@ -7,3 +7,30 @@ Steps to run the simulation:
 6. Train the model using **train.py**, the model will be saved in the **model/** directory.
 7. Now to run the simulation all you have to do is run the **simulation.py**, this will run on the sample videos stored in the sample folder.
 
+Main files and its purpose:
+1. data_format.py: Will read videos from videos/ folder and create training specific data, will get all the frames from the videos, the frames will be then run through tf-pose estimation to extract the body points and then we will divide it into rolling 10 frames and the label for the these frames will depend on the which category the video is from:
+eg: for waving <br>
+	[ 1  2  3  4  5  6  7  8  9 10] 1<br>
+	[ 2  3  4  5  6  7  8  9 10 11] 1<br>
+	[ 3  4  5  6  7  8  9 10 11 12] 1<br>
+	[ 4  5  6  7  8  9 10 11 12 13] 1<br>
+	[ 5  6  7  8  9 10 11 12 13 14] 1<br>
+	[ 6  7  8  9 10 11 12 13 14 15] 1<br>
+	[ 7  8  9 10 11 12 13 14 15 16] 1<br>
+	[ 8  9 10 11 12 13 14 15 16 17] 1<br>
+	[ 9 10 11 12 13 14 15 16 17 18] 1<br>
+	[10 11 12 13 14 15 16 17 18 19] 1<br>
+	[11 12 13 14 15 16 17 18 19 20] 1<br>
+
+for non-waving:
+	[ 1  2  3  4  5  6  7  8  9 10] 0<br>
+	[ 2  3  4  5  6  7  8  9 10 11] 0<br>
+	[ 3  4  5  6  7  8  9 10 11 12] 0<br>
+	[ 4  5  6  7  8  9 10 11 12 13] 0<br>
+	[ 5  6  7  8  9 10 11 12 13 14] 0<br>
+	[ 6  7  8  9 10 11 12 13 14 15] 0<br>
+	[ 7  8  9 10 11 12 13 14 15 16] 0<br>
+	[ 8  9 10 11 12 13 14 15 16 17] 0<br>
+	[ 9 10 11 12 13 14 15 16 17 18] 0<br>
+	[10 11 12 13 14 15 16 17 18 19] 0<br>
+	[11 12 13 14 15 16 17 18 19 20] 0<br>
