@@ -29,7 +29,7 @@ You can also stream the video live from your mobile-phone/tab. For this you need
 **Some important directory:**
 1. data/: Contains the output of data_format.py i.e data and labels in h5
 2. model/: Save the output of train.py as model
-3. videos/: Contains the positive(waving) and negative(non-waving) samples for the generation of data 
+3. videos/: Contains the positive(waving) and negative(non-waving) samples for the generation of data. Also contians the tested results `testsumulation.mp4`
 4. Sample/: Contains some sample vidoes which simulation.py uses to show the simulation.
 
 **Sample data videos:**<br>
