@@ -1,4 +1,5 @@
-Steps to run the simulation:
+**Steps to run the simulation:**
+
 1. Have tensorflow version of tf-pose installed before moving ahead. Please use the link below to see the steps: https://github.com/ildoonet/tf-pose-estimation
 2. Do an installation of the required packages using "pip install -r requirements"
 3. **videos** directory contains all the video files, divided into two sub folders: 1(contains positive samples) and 0(contains negative samples)
@@ -7,7 +8,7 @@ Steps to run the simulation:
 6. Train the model using **train.py**, the model will be saved in the **model/** directory.
 7. Now to run the simulation all you have to do is run the **simulation.py**, this will run on the sample videos stored in the sample folder.
 
-Main files and its purpose:
+**Main files and its purpose:**
 1. data_format.py: Will read videos from videos/ folder and create training specific data, will get all the frames from the videos, the frames will be then run through tf-pose estimation to extract the body points and then we will divide it into rolling 10 frames and the label for the these frames will depend on the which category the video is from:
 eg: for waving <br>
 	[ 1  2  3  4  5  6  7  8  9 10] 1<br>
@@ -48,7 +49,7 @@ You can also stream the video live from your mobile-phone/tab. For this you need
 6. train.py: Run this file to train the neural network.
 
 
-Some important directory:
+**Some important directory:**
 1. data/: Contains the output of data_format.py i.e data and labels in h5
 2. model/: Save the output of train.py as model
 3. videos/: Contains the positive(waving) and negative(non-waving) samples for the generation of data 
