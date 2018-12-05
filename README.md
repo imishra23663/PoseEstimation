@@ -42,4 +42,7 @@ for non-waving:
 
 4. simulation.py: Will show how the model works and will generate a video with class for each frame to be "Waving"  vs "Non-Waving". 
 
-5. train.py: Run this file to train the neural network.
+5. simulation_cam.py: Will do a real-time detection of waving vs non-waving, it will use the system's webcam. 
+You can also stream the video live from your mobile-phone/tab. For this you need to install DroidCam on phone and then start streaming the video and then use the ip address given by DroidCam as input to cam_url and the will live-stream the hand waving detection.
+
+6. train.py: Run this file to train the neural network.
