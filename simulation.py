@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 model = "mobilenet_thin"
 landmark_color = [0, 255, 0]
 pose_classifier = DNN()
-pose_classifier.load('model/pose_classifier.h5')
+pose_classifier.load('/home/hrishi/workspace/repo/PoseEstimation2/model/pose_classifier.h5')
 width = 640
 height = 480
 e = TfPoseEstimator(get_graph_path(model), target_size=(width, height))
