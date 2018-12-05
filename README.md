@@ -34,13 +34,13 @@ You can also stream the video live from your mobile-phone/tab. For this you need
 
 **Sample data videos:**
 **Negative case - No hand Waving **
-![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/no_hand_wave.mp4)
+![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/no_hand_wave.gif)
 
-**Psotive case - hand Waving **
-![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/handwave.mp4)
+**Positive case - hand Waving **
+![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/handwave.gif)
 
 **Results:**
-![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/testsumulation.mp4)
+![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/testsimulation.gif)
 
 
 
