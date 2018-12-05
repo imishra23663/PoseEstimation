@@ -50,7 +50,7 @@ def draw_landmarks(image, landmarks, landmark_color):
             cv2.line(image, centers[pair[0]], centers[pair[1]], landmark_color, 3)
     return image;
 
-def write_text_image(image, text):
+def write_text_image(image, text, cord):
     """
     :param image: image to write on
     :param text: Text  to write
@@ -62,8 +62,8 @@ def write_text_image(image, text):
     pil_image = Image.fromarray(image)
     draw = ImageDraw.Draw(pil_image)
     # use a truetype font
-    font = ImageFont.truetype("arial.ttf", 15)
-    draw.text((100, 150), text, font=font, fill=(0, 0, 0, 0))
+    font = ImageFont.truetype("arial.ttf", 20)
+    draw.text((cord[0], cord[1]), text, font=font, fill=(0, 0, 255, 0))
     # Convert the image to cv2
     # image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
     image = np.array(pil_image)

@@ -9,10 +9,12 @@ from tf_pose.networks import get_graph_path
 from functions import draw_landmarks, convert_landscape_potrait, write_text_image
 
 import matplotlib.pyplot as plt
+root_dir = "/home/hrishi/workspace/repo/PoseEstimation/"
 model = "mobilenet_thin"
+
 landmark_color = [0, 255, 0]
 pose_classifier = DNN()
-pose_classifier.load('model/pose_classifier.h5')
+pose_classifier.load(root_dir+'model/pose_classifier.h5')
 width = 640
 height = 480
 e = TfPoseEstimator(get_graph_path(model), target_size=(width, height))
@@ -21,34 +23,33 @@ required_landmarks_count = 8  # We we only need 8 landmarks for our model
 frame_counter = 0
 frame_per_clip = 10
 significant_frame_counter = 0
-files = glob.glob("Sample/*")
-estimator = TfPoseEstimator(get_graph_path(model), target_size=(width, height))
+files = glob.glob("Sample2/*")
 expected_landmarks = 18
 frame_counter = 0
 boundary_frames_seperator = 15
 frame_interval = 1
-for i in range(len(files)):
-    file = files[i]
-    boundary_frames = 0
-    try:
-        i = 0
-        cap = cv2.VideoCapture(file)
-        current_clip = np.zeros((frame_per_clip, required_landmarks_count, 2))
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                cap.release()
-                break
-            #frame = convert_landscape_potrait(frame)
-            start_time = time.time()
-            frame = cv2.resize(frame, (640, 480))
-            frame_counter += 1
-            # check if boundary frames has been skipped and it is the desired frame like 3rd or 5th etc
-            humans = e.inference(frame, upsample_size=4.0)
-            max_pro_human = 0
-            if len(humans) == 0:
-                print("No Human")
-                continue
+cam_url = 'http://192.168.42.129:8080/video'
+
+boundary_frames = 0
+try:
+    i = 0
+    cap = cv2.VideoCapture(0)
+    current_clip = np.zeros((frame_per_clip, required_landmarks_count, 2))
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            cap.release()
+            break
+        #frame = convert_landscape_potrait(frame)
+        start_time = time.time()
+        #frame = cv2.resize(frame, (640, 480))
+        frame_counter += 1
+        # check if boundary frames has been skipped and it is the desired frame like 3rd or 5th etc
+        humans = e.inference(frame, upsample_size=4.0)
+        max_pro_human = 0
+        if len(humans) == 0:
+            print("No Human Detected")
+        else:
             if len(humans) > 1:
                 # only choose the one with higher score
                 max_avg_score = 0
@@ -95,24 +96,25 @@ for i in range(len(files)):
             # scale the values
             activity = pose_classifier.predict(current_clip.ravel().reshape(1, -1))
             # Draw the landmarks
-            #frame = draw_landmarks(frame, landmarks_current_frame, landmark_color)
+            frame = draw_landmarks(frame, landmarks_current_frame, landmark_color)
             # Write the landmarks
             if activity is not None:
                 if activity == 1:
                     # Write the predicted label
-                    frame = write_text_image(frame, "Waving Hands", [100, 100])
-            end_time = time.time()
-            duration = np.round(end_time - start_time, 3)
-            frame = write_text_image(frame, "Frame Processing Time: " + str(duration), [50//2, 50//2])
-            cv2.imshow('image', frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+                    frame = write_text_image(frame, "Waving Hands", [25, 75])
 
-    except IOError as exc:
-        if exc.errno != errno.EISDIR:
-            raise
-    except KeyboardInterrupt:
-        cap.release()
+        end_time = time.time()
+        duration = np.round(end_time-start_time, 3)
+        frame = write_text_image(frame, "Frame Processing Time: "+str(duration), [25, 25])
+        cv2.imshow('image', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+except IOError as exc:
+    if exc.errno != errno.EISDIR:
+        raise
+except KeyboardInterrupt:
+    cap.release()
 
 # When everything done, release the capture
 cap.release()
