@@ -34,3 +34,12 @@ for non-waving:
 	[ 9 10 11 12 13 14 15 16 17 18] 0<br>
 	[10 11 12 13 14 15 16 17 18 19] 0<br>
 	[11 12 13 14 15 16 17 18 19 20] 0<br>
+	
+	
+2. functions.py: Contians all the necessary util functions required for pre-processing the data, reading and writing videos, reading and writing from h5 files and plotting the bodymarks.
+
+3. DNN.py: Defines the neural network model.
+
+4. simulation.py: Will show how the model works and will generate a video with class for each frame to be "Waving"  vs "Non-Waving". 
+
+5. train.py: Run this file to train the neural network.
