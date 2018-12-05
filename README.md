@@ -40,7 +40,7 @@ You can also stream the video live from your mobile-phone/tab. For this you need
 ![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/handwave.gif)
 
 **Results:**<br>
-![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/testsimulation.gif)
+![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/Architsimulation.gif)
 
 
 
