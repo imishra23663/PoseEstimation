@@ -1,5 +1,5 @@
 ![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/Architsimulation.gif)
-**Steps to run the simulation:**
+<br>**Steps to run the simulation:**
 
 1. Have tensorflow version of tf-pose installed before moving ahead. Please use the link below to see the steps: https://github.com/ildoonet/tf-pose-estimation
 2. Do an installation of the required packages using "pip install -r requirements"
