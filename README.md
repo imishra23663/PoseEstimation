@@ -46,3 +46,11 @@ for non-waving:
 You can also stream the video live from your mobile-phone/tab. For this you need to install DroidCam on phone and then start streaming the video and then use the ip address given by DroidCam as input to cam_url and the will live-stream the hand waving detection.
 
 6. train.py: Run this file to train the neural network.
+
+
+Some important directory:
+1. data/: Contains the output of data_format.py i.e data and labels in h5
+2. model/: Save the output of train.py as model
+3. videos/: Contains the positive(waving) and negative(non-waving) samples for the generation of data 
+4. Sample/: Contains some sample vidoes which simulation.py uses to show the simulation.
+
