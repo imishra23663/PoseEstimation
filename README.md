@@ -32,14 +32,14 @@ You can also stream the video live from your mobile-phone/tab. For this you need
 3. videos/: Contains the positive(waving) and negative(non-waving) samples for the generation of data 
 4. Sample/: Contains some sample vidoes which simulation.py uses to show the simulation.
 
-**Sample data videos:**
-**Negative case - No hand Waving **
+**Sample data videos:**<br>
+**Negative case - No hand Waving **<br>
 ![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/no_hand_wave.gif)
 
-**Positive case - hand Waving **
+**Positive case - hand Waving **<br>
 ![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/handwave.gif)
 
-**Results:**
+**Results:**<br>
 ![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/testsimulation.gif)
 
 
