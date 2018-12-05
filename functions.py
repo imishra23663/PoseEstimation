@@ -3,10 +3,10 @@ import h5py
 import cv2
 import errno
 import numpy as np
-from tqdm import tqdm
 from tf_pose import common
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
+from PIL import ImageFont, ImageDraw, Image
 import matplotlib.pyplot as plt
 
 
@@ -32,7 +32,8 @@ def detect_body_landmarks(image, estimator):
             landmarks.append(landmark)
     return np.array(landmarks)
 
-def draw_landmarks(image, landmarks, landmark_color, activity = None):
+
+def draw_landmarks(image, landmarks, landmark_color):
     centers = {}
     for i in range(landmarks.shape[0]):  # for each body part
         # We have set -1 to the landmarks which were not found in  image
@@ -47,7 +48,7 @@ def draw_landmarks(image, landmarks, landmark_color, activity = None):
         if landmarks[pair[0], 0] != 0 and landmarks[pair[0], 1] != 0 and \
                 landmarks[pair[1], 0] != 0 and landmarks[pair[1], 1] != 0:
             cv2.line(image, centers[pair[0]], centers[pair[1]], landmark_color, 3)
-
+    return image;
 
 def write_text_image(image, text):
     """
@@ -56,7 +57,16 @@ def write_text_image(image, text):
     :return:
     """
 
-    cv2.putText(image, text, (100, 100), cv2.FONT_HERSHEY_DUPLEX, 0.4, (40, 40, 255), 1)
+    # cv2.putText(image, text, (50, 50), cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 0, 0), 1)
+    # Using PIL image to get true fonts
+    pil_image = Image.fromarray(image)
+    draw = ImageDraw.Draw(pil_image)
+    # use a truetype font
+    font = ImageFont.truetype("arial.ttf", 15)
+    draw.text((100, 150), text, font=font, fill=(0, 0, 0, 0))
+    # Convert the image to cv2
+    # image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+    image = np.array(pil_image)
     return np.uint8(image)
 
 
@@ -74,9 +84,10 @@ def read_videos_and_labels(path, model, logfile):
     height = 480
     e = TfPoseEstimator(get_graph_path(model), target_size=(width, height))
     boundary_frames_seperator = 15
-    frame_per_clip = 30
+    frame_per_clip = 5
     frame_interval = 1
     landmarks_count = common.CocoPart.Background.value
+    required_landmarks_count = 8  # We we only need 8 landmarks for our model
     all_video_clips = []
     for i in range(len(files)):
         if i % 10 == 0:
@@ -94,7 +105,7 @@ def read_videos_and_labels(path, model, logfile):
         try:
             cap = cv2.VideoCapture(file)
             frame_counter = 0
-            current_clip = np.zeros((0, landmarks_count, 2))
+            current_clip = np.zeros((0, required_landmarks_count, 2))
             while True:
                 ret, frame = cap.read()
                 if not ret:
@@ -124,6 +135,7 @@ def read_videos_and_labels(path, model, logfile):
                         print("%d Humans" %len(humans))
                     human = humans[max_pro_human]
                     landmarks_current_frame = np.zeros((landmarks_count, 2))
+                    required_landmark_frame = np.zeros((required_landmarks_count, 2))
                     for j in range(landmarks_count):
                         if j in human.body_parts:
                             body_part = human.body_parts[j]
@@ -131,18 +143,23 @@ def read_videos_and_labels(path, model, logfile):
                             y = int(body_part.y * height + 0.5)
                             landmarks_current_frame[j, 0] = x
                             landmarks_current_frame[j, 1] = y
+
+                            # if the landmark index is less then required_landmarks_count
+                            if j < required_landmarks_count:
+                                required_landmark_frame[j] = landmarks_current_frame[j]
                         else:
                             landmarks_current_frame[j, 0] = 0
                             landmarks_current_frame[j, 1] = 0
                     if current_clip.shape[0] > frame_per_clip:
                         print("Error")
-                    landmarks_current_frame = np.uint16(landmarks_current_frame)
-                    current_clip = np.concatenate((
-                        current_clip, landmarks_current_frame.reshape(-1,
-                                                                      landmarks_current_frame.shape[0],
-                                                                      landmarks_current_frame.shape[1])), axis=0)
 
-                    if frame_counter >= 2 * boundary_frames-1 and current_clip.shape[0] == frame_per_clip:
+                    required_landmark_frame = np.uint16(required_landmark_frame)
+                    current_clip = np.concatenate((
+                        current_clip, required_landmark_frame.reshape(-1,
+                                                                      required_landmark_frame.shape[0],
+                                                                      required_landmark_frame.shape[1])), axis=0)
+
+                    if frame_counter >= boundary_frames+frame_per_clip-1 and current_clip.shape[0] == frame_per_clip:
                         # delete first row
                         if current_clip.shape[0] > frame_per_clip:
                             print("Greater than %d", frame_per_clip)

@@ -12,7 +12,7 @@ This module is used to create and train a DNN model on the formatted data
 """
 
 root_dir = root_dir = "./"
-data_h5 = root_dir+'data/body_pos.h5'
+data_h5 = root_dir+'data/body_pos_clips.h5'
 # Transform data
 model = "mobilenet_thin"
 logfile = root_dir+"logs.txt"
@@ -30,8 +30,8 @@ X_train, X_test, y_train, y_test = train_test_split(pixels_ravel, labels, test_s
 
 dnn = DNN()
 feature_size = np.array([X_train.shape[1]])
-layer_nodes = np.array([256, 64, 16])
-dropouts = np.array([0, 0, 0])
+layer_nodes = np.array([128, 32, 8, 4])
+dropouts = np.array([0, 0, 0, 0])
 np_of_output_class = 2
 activation = 'relu'
 dnn.create(feature_size, layer_nodes, dropouts, np_of_output_class, activation, l2_norm=0)
@@ -40,7 +40,7 @@ optimizer_name = 'SGD'
 dnn.compile(loss_function, optimizer_name, metrics=['accuracy'], learning_rate=0.001, momentum=0.9)
 y_train_encoded = np_utils.to_categorical(np.array(y_train).reshape(-1))
 y_test_encoded = np_utils.to_categorical(np.array(y_test).reshape(-1))
-epochs = 300
+epochs = 400
 class_weights = class_weight.compute_class_weight('balanced', np.unique(y_train.reshape(-1)), y_train.reshape(-1))
 dnn.model.summary()
 dnn.train(X_train, y_train_encoded, X_test, y_test_encoded, epochs=epochs, class_weights=class_weights,

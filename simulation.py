@@ -8,10 +8,6 @@ from tf_pose.networks import get_graph_path
 from functions import draw_landmarks, convert_landscape_potrait, write_text_image
 
 import matplotlib.pyplot as plt
-
-data_directory = "videos3/"
-file = data_directory+"1/2.mp4"
-filename = data_directory+"simulation.mp4"
 model = "mobilenet_thin"
 landmark_color = [0, 255, 0]
 pose_classifier = DNN()
@@ -19,12 +15,10 @@ pose_classifier.load('model/pose_classifier.h5')
 width = 640
 height = 480
 e = TfPoseEstimator(get_graph_path(model), target_size=(width, height))
-max_frames = 5000
-feature_frame_count = 310
-frame_interval = 1
 landmarks_count = 18
-data = np.zeros((max_frames, landmarks_count, 2))
+required_landmarks_count = 8  # We we only need 8 landmarks for our model
 frame_counter = 0
+frame_per_clip = 10
 significant_frame_counter = 0
 files = glob.glob("Sample2/*")
 estimator = TfPoseEstimator(get_graph_path(model), target_size=(width, height))
@@ -39,7 +33,7 @@ for i in range(len(files)):
     try:
         i = 0
         cap = cv2.VideoCapture(file)
-        current_clip = np.zeros((30, landmarks_count, 2))
+        current_clip = np.zeros((frame_per_clip, required_landmarks_count, 2))
         while True:
             ret, frame = cap.read()
             if not ret:
@@ -71,6 +65,7 @@ for i in range(len(files)):
             human = humans[max_pro_human]
 
             landmarks_current_frame = np.zeros((landmarks_count, 2))
+            required_landmark_frame = np.zeros((required_landmarks_count, 2))
             for j in range(landmarks_count):
                 if j in human.body_parts:
                     body_part = human.body_parts[j]
@@ -78,43 +73,33 @@ for i in range(len(files)):
                     y = int(body_part.y * height + 0.5)
                     landmarks_current_frame[j, 0] = x
                     landmarks_current_frame[j, 1] = y
+
+                    # if the landmark index is less then required_landmarks_count
+                    if j < required_landmarks_count:
+                        required_landmark_frame[j] = landmarks_current_frame[j]
                 else:
                     landmarks_current_frame[j, 0] = 0
                     landmarks_current_frame[j, 1] = 0
-            landmarks_current_frame = landmarks_current_frame
-            missing_landmarks = expected_landmarks - landmarks_current_frame.shape[0]
-            landmarks = landmarks_current_frame.copy()
-            landmarks_current_frame[:, 0] = landmarks_current_frame[:, 0] / 640.0
-            landmarks_current_frame[:, 1] = landmarks_current_frame[:, 1] / 480.0
+
+            required_landmark_frame[:, 0] = required_landmark_frame[:, 0] / 640.0
+            required_landmark_frame[:, 1] = required_landmark_frame[:, 1] / 480.0
 
             current_clip = np.concatenate((
-                current_clip, landmarks_current_frame.reshape(-1,
-                                                              landmarks_current_frame.shape[0],
-                                                              landmarks_current_frame.shape[1])), axis=0)
+                current_clip, required_landmark_frame.reshape(-1,
+                                                              required_landmark_frame.shape[0],
+                                                              required_landmark_frame.shape[1])), axis=0)
             current_clip = np.delete(current_clip, 0, axis=0)
             frame_counter += 1
 
             # scale the values
             activity = pose_classifier.predict(current_clip.ravel().reshape(1, -1))
-            if activity is not None:
-                if activity == 1:
-                    activity_name = "Waving Hands"
-                else:
-                    activity_name = "No Waving Hands"
-
-            print("Activity%d" %activity)
-
             # Draw the landmarks
-            # frame = draw_landmarks(frame, landmarks, landmark_color)
+            #frame = draw_landmarks(frame, landmarks_current_frame, landmark_color)
             # Write the landmarks
             if activity is not None:
                 if activity == 1:
-                    activity_name = "Waving Hands"
-                else:
-                    activity_name = "No Waving Hands"
-
-            # Write the predicted label
-            frame = write_text_image(frame, activity_name)
+                    # Write the predicted label
+                    frame = write_text_image(frame, "Waving Hands")
 
             cv2.imshow('image', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
