@@ -1,4 +1,7 @@
-**Steps to run the simulation:**
+
+![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/Architsimulation.gif?style=centerme)
+
+<br>**Steps to run the simulation:**
 
 1. Have tensorflow version of tf-pose installed before moving ahead. Please use the link below to see the steps: https://github.com/ildoonet/tf-pose-estimation
 2. Do an installation of the required packages using "pip install -r requirements"
@@ -28,4 +31,21 @@ You can also stream the video live from your mobile-phone/tab. For this you need
 2. model/: Save the output of train.py as model
 3. videos/: Contains the positive(waving) and negative(non-waving) samples for the generation of data 
 4. Sample/: Contains some sample vidoes which simulation.py uses to show the simulation.
+
+**Sample data videos:**
+**Negative case - No hand Waving **
+![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/no_hand_wave.mp4)
+
+**Psotive case - hand Waving **
+![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/handwave.mp4)
+
+**Results:**
+![](https://github.com/imishra23663/PoseEstimation/blob/master/videos/testsumulation.mp4)
+
+
+
+
+
+
+
 
